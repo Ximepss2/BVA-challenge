@@ -1,0 +1,105 @@
+Sub stock()
+
+totalws = ActiveWorkbook.Worksheets.Count
+
+For s = 2 To totalws
+
+nomhoja = Worksheets.Item(s).Name
+
+Worksheets(nomhoja).Select
+
+st = 2
+Inicio = 2
+n_row = Cells(Rows.Count, 1).End(xlUp).Row
+volume = 0
+
+For k = 2 To n_row
+
+If Cells(k + 1, 1).Value <> Cells(k, 1).Value Then
+
+nombrest = Cells(k, 1).Value
+volume = volume + Cells(k, 7).Value
+
+Range("J" & st).Value = nombrest
+Range("M" & st).Value = volume
+
+Final = k
+
+If Cells(Inicio, 3) = 0 Then
+Range("L" & st).Value = 0
+Else
+
+yearly_change = Cells(Inicio, 3) - Cells(Final, 6)
+Percentage = ((Cells(Inicio, 3) - Cells(Final, 6)) / Cells(Inicio, 3)) * 100
+
+Range("K" & st).Value = yearly_change
+Range("L" & st).Value = Percentage
+
+End If
+
+Inicio = k + 1
+st = st + 1
+volume = 0
+
+Else
+
+volume = volume + Cells(k, 7).Value
+End If
+
+Next k
+
+nren = Cells(Rows.Count, 11).End(xlUp).Row
+
+For t = 2 To nren
+If Cells(t, 11).Value > 0 Then
+Cells(t, 11).Interior.ColorIndex = 4
+Else
+Cells(t, 11).Interior.ColorIndex = 3
+End If
+Next t
+
+Range("K1").Value = "Yearly Change"
+Range("L1").Value = "Percentage"
+Range("M1").Value = "Volume"
+Range("O2").Value = "Greatest increase"
+Range("O3").Value = "Greatest decrease"
+Range("O4").Value = "Greatest volume"
+Range("P1").Value = "Thicker"
+Range("Q1").Value = "Volume"
+
+n_stocks = Cells(Rows.Count, 11).End(xlUp).Row
+
+greatest_increase = 2
+greatest_decrease = 2
+greatest_volume = 2
+
+For r = 2 To n_stocks
+
+If Cells(r + 1, 11) > Cells(greatest_increase, 11) Then
+greatest_increase = r + 1
+End If
+
+If Cells(r + 1, 11) < Cells(greatest_decrease, 11) Then
+greatest_decrease = r + 1
+End If
+
+If Cells(r + 1, 13) > Cells(greatest_volume, 13) Then
+greatest_volume = r + 1
+End If
+
+Next r
+
+Range("P2").Value = Cells(greatest_increase, 10)
+Range("Q2").Value = Cells(greatest_increase, 11)
+Range("P3").Value = Cells(greatest_decrease, 10)
+Range("Q3").Value = Cells(greatest_decrease, 11)
+Range("P4").Value = Cells(greatest_volume, 10)
+Range("Q4").Value = Cells(greatest_volume, 13)
+
+
+
+Next s
+
+End Sub
+
+
